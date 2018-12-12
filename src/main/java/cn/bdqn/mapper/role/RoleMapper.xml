@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bdqn.mapper.role.RoleMapper">
+	
+	<sql id="role">
+			<if test="roleCode != null">and roleCode=#{roleCode}</if>
+			<if test="roleName != null">and roleName like '%${roleName}%'</if>
+			<if test="createdBy != 0 ">and createdBy=#{createdBy}</if>
+			<if test="creationDate != null ">and creationDate=#{creationDate}</if>
+			<if test="modifyBy != 0 ">and modifyBy=#{modifyBy}</if>
+			<if test="modifyDate != null ">and modifyDate=#{modifyDate}</if>
+	</sql>
+
+	<select id="findAllRole" resultType="role" parameterType="role">
+	select * from smbms_role
+	<where>
+		<include refid="role"></include>
+	</where>
+	</select>	
+	
+	<delete id="delectRole" parameterType="role">
+		delete from smbms_role where roleCode=#{roleCode}
+	</delete>
+	
+	<update id="updateRole" parameterType="role">
+		update smbms_role set roleName=#{roleName},modifyBy=#{modifyBy},modifyDate=#{modifyDate} where roleCode=#{roleCode}
+	</update>
+	
+	<insert id="insertRole" parameterType="role">
+		INSERT INTO smbms_role(roleCode,roleName,createdBy,creationDate) VALUES(#{roleCode},#{roleName},#{createdBy},#{creationDate});	
+	</insert>
+	
+		
+	</mapper>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bdqn.mapper.user.UserMapper">
+	<sql id="selecruser">
+			<if test="userCode != null">and userCode=#{userCode}</if>
+			<if test="userName != null">and userName like '%${userName}%'</if>
+			<if test="userPassword != null">and userPassword=#{userPassword}</if>
+			<if test="gender != null">and gender=#{gender}</if>
+			<if test="birthday != null">and birthday=#{birthday}</if>
+			<if test="phone != null">and phone=#{phone}</if>
+			<if test="address != null">and address=#{address}</if>
+			<if test="userRole != 0 ">and userRole=#{userRole}</if>
+	</sql>
+	<select id="findUserByUserNameAndPassWord" resultType="user" parameterType="user">
+	select * from smbms_user where userCode=#{userCode} and userPassword=#{userPassword}
+	</select>
+	
+	
+	<update id="updateUser" parameterType="user">
+		update smbms_user set userPassword=#{userPassword} where userCode=#{userCode}
+	</update>	
+	
+	<select id="getUserCount" resultType="java.lang.Integer" parameterType="user">
+		select count(*) from smbms_user 
+		<where>
+		<include refid="selecruser"></include>
+		</where>
+	</select>	
+	
+	<select id="getUserPageList" parameterType="user" resultType="user">
+		select user.*,role.roleName from smbms_user user,smbms_role role where user.userRole=role.id 
+		<include refid="selecruser"></include>
+		limit #{page.suoYin},#{page.myTiao}
+	</select>
+	
+	<delete id="delectUser" parameterType="user">
+		delete from smbms_user where userCode=#{userCode}
+	</delete>
+	
+	<select id="getUser" parameterType="user" resultType="user">
+		select user.*,role.roleName from smbms_user user,smbms_role role where user.userRole=role.id 
+		<include refid="selecruser"></include>
+	</select>
+	
+			
+	 <insert id="insertUser" parameterType="user">
+		INSERT INTO smbms_user(userCode,userName,userPassword, gender,birthday,phone,address,userRole,createdBy,creationDate) VALUES(#{userCode},#{userName},#{userPassword}, #{gender},#{birthday},#{phone},#{address},#{userRole},#{createdBy},#{creationDate});	
+	</insert>
+	
+	<update id="updateUser2" parameterType="user">
+		update smbms_user set gender=#{gender},birthday=#{birthday},phone=#{phone},address=#{address},userRole=#{userRole},modifyBy=#{modifyBy},modifyDate=#{modifyDate} where userCode=#{userCode}
+	</update>
+</mapper>

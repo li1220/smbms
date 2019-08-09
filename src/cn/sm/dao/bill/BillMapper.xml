@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+	<mapper namespace="cn.sm.dao.bill.BillMapper">
+	<sql id="select">
+			<if test="billCode != null">and billCode like '%${billCode}%'</if>
+			<if test="productName != null">and productName like '%${productName}%'</if>
+			<if test="productDesc != null">and productDesc like '%${productDesc}%'</if>
+			<if test="productUnit != null">and productUnit like '%${productUnit}%'</if>
+			<if test="isPayment != null"> 	and isPayment = #{isPayment}</if>
+			<if test="providerId != 0  ">	and providerId = #{providerId}</if>
+	</sql>
+	
+	<select id="getAllCount" parameterType="bill" resultType="java.lang.Integer">
+		select count(*) from smbms_bill
+		<where>
+			<include refid="select"></include>
+		</where>
+	</select>
+	
+	<select id="findAll" parameterType="bill" resultType="bill">
+		select smbms_bill.*,smbms_provider.proName FROM smbms_bill,smbms_provider where smbms_provider.id=smbms_bill.providerId
+		<include refid="select"></include>
+		limit #{page.suoYin},#{page.myTiao}
+	</select>
+	
+	<delete id="delectBill" parameterType="bill">
+		delete from smbms_bill where billCode=#{billCode}
+	</delete>
+	
+	<insert id="insertBill" parameterType="bill">
+		insert into smbms_bill(billCode,productName,productUnit,productCount,totalPrice,isPayment,providerId,createdBy,creationDate) values(#{billCode},#{productName},#{productUnit},#{productCount},#{totalPrice},#{isPayment},#{providerId},#{createdBy},#{creationDate})
+	</insert> 
+	
+	<select id="getOneBill" parameterType="bill" resultType="bill">
+	select smbms_bill.*,smbms_provider.proName FROM smbms_bill,smbms_provider where smbms_provider.id=smbms_bill.providerId and smbms_bill.billCode=#{billCode}
+	</select>
+	
+	</mapper>

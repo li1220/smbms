@@ -1,4 +1,4 @@
-#mbmb
+
 超市电商管理系统
 SSM框架+ 用Maven管理jar包
 默认登录密码 admin/1234567

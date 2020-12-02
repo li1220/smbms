@@ -7,6 +7,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="https://blobs.officehome.msocdn.com/images/content/images/favicon-8f211ea639.ico" />
     <title>Office 365</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdui/0.4.3/css/mdui.min.css">
+    <script src="https://recaptcha.net/recaptcha/api.js" async defer></script>
     <style>
         @media screen and (max-width:600px){.mdui-toolbar>img{margin:auto}.hero>.mdui-typo-display-3{font-size:27px}.hero>.mdui-typo-title-opacity{font-size:15px}.enroll{padding:40px 15px!important}.email{display:block!important}}@media screen and (min-width:600px){.enroll{padding:50px 40px!important}}.enroll-mdui-dialog{max-width:inherit;overflow-x:hidden;overflow-y:scroll}.hero-bg{background:url(https://i.loli.net/2020/01/25/KEScJXCBfAzaIjW.png) no-repeat;background-size:cover;height:100vh;overflow:scroll}.hero-btn{width:120px;height:45px}.enroll{background-color:#fff;position:absolute;color:#000;padding:60px 60px 100px 60px;display:none}.code,.email{display:flex;align-items:flex-end;justify-content:space-between}
     </style>
@@ -131,6 +132,8 @@
 
                     <div class="mdui-col-xs-12">
                         <br>
+                        <div class="g-recaptcha" data-sitekey="${recaptcha_sitekey}"></div>
+                        <br>
                         <input type="submit" class="mdui-col-xs-12 mdui-btn mdui-ripple mdui-color-pink hero-button" style="float: right" id="submit">
                     </div>
                 </div>
@@ -143,48 +146,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mdui/0.4.3/js/mdui.min.js"></script>
     <script>
-	    var $$ = mdui.JQ;
-$$(document).ready(function () {
-    "" != $$("#notice>.mdui-dialog-content").html() && new mdui.Dialog("#notice", {history: false}).open()
-});
-var enroll = new mdui.Dialog("#enroll", {modal: !0});
-$$("#getOffice").on("click", function (e) {
-    enroll.open()
-}), $$("form").on("submit", function (e) {
-    e.preventDefault();
-    var a = {
-        subscription: $$("#subscription").val(),
-        displayname: $$("#displayname").val().trim(),
-        username: $$("#username").val().trim(),
-        domain: $$("#domain").val(),
-        code: $$("#code").val().trim(),
-        grecaptcha_token: grecaptcha.getResponse()
-    };
-    $$("#accountInfo, #activation").hide(), $$(".mdui-progress").show(), $$(".enroll").height("auto"), $$("hr").hide(), mdui.mutation(), $$.ajax({
-        method: "POST",
-        url: "/mscreate",
-        data: JSON.stringify(a),
-        contentType: "application/json",
-        success: function (e) {
-            var a = JSON.parse(e);
-            switch ($$(".mdui-progress").hide(), $$("hr").show(), a.stat) {
-                case"success":
-                    $$("#createdAccount").show(), $$("#email").val(a.email), $$("#password").val(a.password);
-                    break;
-                case"username exists":
-                    $$("#accountInfo, #activation").show(), enroll.close(), new mdui.Dialog("#usernameExists").open();
-                    break;
-                case"invalid code":
-                    $$("#accountInfo, #activation").show(), enroll.close(), new mdui.Dialog("#invalidCode").open();
-                    break;
-                default:
-                    enroll.close(), mdui.alert(e)
-            }
-            $$("#displayname").val(""), $$("#username").val(""), $$("#code").val(""), $$(".enroll").height("auto")
-        }
-    })
-});
-    </script>
+		var $$=mdui.JQ;$$(document).ready(function(){""!=$$("#notice>.mdui-dialog-content").html()&&new mdui.Dialog("#notice",{history:false}).open()});var enroll=new mdui.Dialog("#enroll",{modal:!0});$$("#getOffice").on("click",function(e){enroll.open()}),$$("form").on("submit",function(e){e.preventDefault();var a={subscription:$$("#subscription").val(),displayname:$$("#displayname").val().trim(),username:$$("#username").val().trim(),domain:$$("#domain").val(),code:$$("#code").val().trim()};$$("#accountInfo, #activation").hide(),$$(".mdui-progress").show(),$$(".enroll").height("auto"),$$("hr").hide(),mdui.mutation(),$$.ajax({method:"POST",url:"/mscreate",data:JSON.stringify(a),contentType:"application/json",success:function(e){var a=JSON.parse(e);switch($$(".mdui-progress").hide(),$$("hr").show(),a.stat){case"success":$$("#createdAccount").show(),$$("#email").val(a.email),$$("#password").val(a.password);break;case"username exists":$$("#accountInfo, #activation").show(),enroll.close(),new mdui.Dialog("#usernameExists").open();break;case"invalid code":$$("#accountInfo, #activation").show(),enroll.close(),new mdui.Dialog("#invalidCode").open();break;default:enroll.close(),mdui.alert(e)}$$("#displayname").val(""),$$("#username").val(""),$$("#code").val(""),$$(".enroll").height("auto")}})});
+	</script>
 </body>
 
 </html>
